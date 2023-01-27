@@ -15,7 +15,7 @@ MLFlow native model serving within Anaconda Enterprise.
 
 This project provided a mechanism to launch a mlflow model serving instance within Anaconda Enterprise.
 
-Note that the model will be launched using the conda environment management configuration.  See [Official MLFlow Models Docuemntation](https://mlflow.org/docs/2.0.1/cli.html#mlflow-models) for additional details.
+Note that the model will be launched using the conda environment management configuration.  See [Official MLFlow Models Documentation](https://mlflow.org/docs/2.0.1/cli.html#mlflow-models) for additional details.
 
 Configuration
 --------
