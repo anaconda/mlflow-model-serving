@@ -1,0 +1,106 @@
+name: mlflow-model-serving
+description: MLFlow Model Serving For Anaconda Enterprise
+
+
+variables:
+  MLFLOW_DISABLE_ENV_MANAGER_CONDA_WARNING: "TRUE"
+
+  # Defaults set below are for testing only.  See instructions on configuring this at run-time.
+
+  # These should be set via ae5 secrets (for ease of customization)
+  MLFLOW_TRACKING_URI: http://0.0.0.0:8086/
+  MLFLOW_REGISTRY_URI: http://0.0.0.0:8086/
+  MLFLOW_TRACKING_TOKEN: SECRET-TOKEN
+
+  # These values should be set when deploying into Anaconda Enterprise.
+  MLFLOW_SERVING_MODEL_NAME: SET_NAME_VARIABLE_AT_DEPLOY_TIME
+  MLFLOW_SERVING_MODEL_STAGE: SET_STAGE_VARIABLE_AT_DEPLOY_TIME
+
+commands:
+  #
+  # Run Time Commands
+  #
+
+  Serve:
+    env_spec: default
+    unix: python -m src.mlflow.model.serving.handler
+    supports_http_options: true
+
+  #
+  # Development Time Commands
+  #
+
+  bash:
+    env_spec: development
+    unix: bash
+
+  test:unit:
+    env_spec: development
+    unix: coverage run --append --rcfile=.coveragerc -m unittest discover test/unit/mlflow/model/serving
+
+  coverage:
+    env_spec: development
+    unix: |
+      coverage report
+      coverage html
+      coverage xml
+
+  clean:
+    env_spec: development
+    unix: |
+      rm -rf .coverage htmlcov docs/build
+
+  lint:
+    env_spec: development
+    unix: |
+      pylint src
+      isort --check --diff .
+      black --line-length=120 --target-version=py310 --check --diff .
+
+  lint:fix:
+    env_spec: development
+    unix: |
+      isort .
+      black --line-length=120 --target-version=py310 .
+
+  build:docs:
+    env_spec: development
+    unix: |
+      sphinx-build -b html docs/source docs/build
+
+channels:
+    - https://conda.anaconda.org/conda-forge/
+    - https://conda.anaconda.org/joshburt/
+
+platforms:
+  - linux-64
+  - osx-64
+  - osx-arm64
+  - win-64
+
+env_specs:
+  default:
+    description: Runtime Environment
+    packages:
+      - python=3.10
+      - mlflow=2.0.1
+      - ipykernel
+      - anaconda.enterprise.server.contracts>=0.8.0
+      - anaconda.enterprise.server.common.sdk>=0.4.5
+
+  development:
+    description: Development Environment
+    packages:
+      - python=3.10
+      - mlflow=2.0.1
+      - ipykernel
+      - isort
+      - black
+      - black-jupyter
+      - pylint
+      - coverage
+      - pyyaml
+      - sphinx
+      - myst-parser
+      - anaconda.enterprise.server.contracts>=0.8.0
+      - anaconda.enterprise.server.common.sdk>=0.4.5
