@@ -21,9 +21,22 @@ commands:
   # Run Time Commands
   #
 
+  # [Default] Model serving using Conda managed dependencies
   Serve:
     env_spec: default
-    unix: python -m src.mlflow.model.serving.handler
+    unix: python -m src.mlflow.model.serving.handler --env-manager conda
+    supports_http_options: true
+
+  # Model serving using the project environment for dependencies.
+  ServeLocal:
+    env_spec: default
+    unix: python -m src.mlflow.model.serving.handler --env-manager local
+    supports_http_options: true
+
+  # Model serving using virtualenv managed dependencies
+  ServeVirtualEnv:
+    env_spec: default
+    unix: python -m src.mlflow.model.serving.handler --env-manager virtualenv
     supports_http_options: true
 
   #
