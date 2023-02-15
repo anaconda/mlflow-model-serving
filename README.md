@@ -28,7 +28,7 @@ When deploying the solution in Anaconda Enterprise the below variables must be d
 
     The model stage or version to pull from the registry.
 
-Additionally access to the tracking serber should be defined as Anaconda Enterprise Secrets.  The below secrets are required to be defined:
+Additionally access to the tracking server should be defined as Anaconda Enterprise Secrets.  The below secrets are required to be defined:
 * `MLFLOW_TRACKING_URI`
 * `MLFLOW_REGISTRY_URI`
 * `MLFLOW_TRACKING_TOKEN`
@@ -56,13 +56,15 @@ The following details will need to be defined:
 ae5 project upload --name "dev.mlflow.endpoint.taxi" mlflow.model.serving.x.y.z.tar.gz
 ```
 
-2. Create the deployment:
+2. Slip-Stream environment variables into the `anaconda-project.yml`
+
+3. Create the deployment:
 
 ```text
-ae5 project deploy --name "dev.mlflow.endpoint.taxi" --endpoint "dev-mlflow-endpoint-taxi" --command "Serve" --private --variable MLFLOW_SERVING_MODEL_NAME="taxi_fare_regressor" --variable MLFLOW_SERVING_MODEL_STAGE="Staging" "dev.mlflow.endpoint.taxi"
+ae5 project deploy --name "dev.mlflow.endpoint.taxi" --endpoint "dev-mlflow-endpoint-taxi" --command "Serve" --private "dev.mlflow.endpoint.taxi"
 ```
 
-3. Create private deployment token:
+4. Create private deployment token:
 
 ```text
 ae5 deployment token "dev.mlflow.endpoint.taxi"
